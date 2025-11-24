@@ -14,17 +14,24 @@ export type Action = {
     is_error?: boolean;
     url?: any;
     output?: any;
+    progress?: number;
+    startTime?: number;
 };
 
 export default async function convertFile(
     ffmpeg: FFmpeg,
-    action: Action
+    action: Action,
+    onProgress: (progress: number) => void
 ): Promise<any> {
     const { file, to, file_name, file_type } = action;
     const input = file;
     const output = file_name.split(".").slice(0, -1).join(".") + "." + to;
 
     await ffmpeg.writeFile(input.name, await fetchFile(input));
+
+    ffmpeg.on("progress", ({ progress }) => {
+        onProgress(progress * 100);
+    });
 
     // FFmpeg commands based on file type
     let command: string[] = [];

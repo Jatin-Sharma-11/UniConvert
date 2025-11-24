@@ -1,8 +1,19 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { Github } from "lucide-react";
+import { Github, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
+    const { theme, setTheme } = useTheme();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
     return (
         <nav className="flex items-center justify-between px-6 py-4 border-b bg-background/50 backdrop-blur-md sticky top-0 z-50">
             <Link href="/" className="flex items-center gap-2">
@@ -27,6 +38,19 @@ export default function Navbar() {
                 </span>
             </Link>
             <div className="flex items-center gap-4">
+                {mounted && (
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                    >
+                        {theme === "dark" ? (
+                            <Sun className="w-5 h-5" />
+                        ) : (
+                            <Moon className="w-5 h-5" />
+                        )}
+                    </Button>
+                )}
                 <Link href="https://github.com/Jatin-Sharma-11/UniConvert" target="_blank">
                     <Button variant="ghost" size="icon">
                         <Github className="w-5 h-5" />

@@ -17,12 +17,20 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import useFFmpeg from "@/hooks/use-ffmpeg";
 import convertFile, { Action } from "@/utils/convert";
+import { Progress } from "@/components/ui/progress";
 
 const extensions = {
-    image: ["jpg", "jpeg", "png", "gif", "bmp", "webp", "ico", "tif", "tiff", "svg", "raw", "tga"],
+    image: ["jpg", "jpeg", "png", "gif", "bmp", "webp", "ico", "tif", "tiff", "tga"],
     video: ["mp4", "m4v", "mp4v", "3gp", "3g2", "avi", "mov", "wmv", "mkv", "flv", "ogv", "webm", "h264", "264", "hevc", "265"],
     audio: ["mp3", "wav", "ogg", "aac", "wma", "flac", "m4a"],
 };
+
+function formatTime(seconds: number): string {
+    if (!seconds || seconds < 0) return "Calculating...";
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+}
 
 export default function Dropzone() {
     const { ffmpeg, loaded, isLoading } = useFFmpeg();
@@ -44,6 +52,8 @@ export default function Dropzone() {
                 is_converting: false,
                 is_converted: false,
                 is_error: false,
+                progress: 0,
+                startTime: 0,
             }));
             setActions((prev) => [...prev, ...newActions]);
             toast.success("Files added successfully");
@@ -91,7 +101,33 @@ export default function Dropzone() {
         for (const action of newActions) {
             if (action.to) {
                 try {
-                    const { url, output } = await convertFile(ffmpeg, action);
+                    setActions((prev) =>
+                        prev.map((a) => {
+                            if (a.file_name === action.file_name) {
+                                return {
+                                    ...a,
+                                    is_converting: true,
+                                    startTime: Date.now(),
+                                };
+                            }
+                            return a;
+                        })
+                    );
+
+                    const { url, output } = await convertFile(ffmpeg, action, (progress) => {
+                        setActions((prev) =>
+                            prev.map((a) => {
+                                if (a.file_name === action.file_name) {
+                                    return {
+                                        ...a,
+                                        progress: progress,
+                                    };
+                                }
+                                return a;
+                            })
+                        );
+                    });
+
                     setActions((prev) =>
                         prev.map((a) => {
                             if (a.file_name === action.file_name) {
@@ -229,6 +265,19 @@ export default function Dropzone() {
                                         <p className="text-xs text-muted-foreground">
                                             {(action.file_size / 1024 / 1024).toFixed(2)} MB
                                         </p>
+                                        {action.is_converting && (
+                                            <div className="mt-2 space-y-2">
+                                                <Progress value={action.progress} className="h-2.5" />
+                                                <div className="flex justify-between text-xs text-muted-foreground">
+                                                    <span className="font-medium">{Math.round(action.progress || 0)}%</span>
+                                                    <span className="font-medium">
+                                                        ETC: {action.progress && action.progress > 0 && action.startTime
+                                                            ? formatTime((Date.now() - action.startTime) / action.progress * (100 - action.progress) / 1000)
+                                                            : formatTime(0)}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
 
                                     {action.is_converted ? (
