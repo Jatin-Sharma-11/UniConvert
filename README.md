@@ -20,7 +20,7 @@
 
 UniConvert leverages the power of **WebAssembly** to bring desktop-grade media processing to the web. Unlike traditional converters that upload your files to a server, UniConvert loads the FFmpeg engine directly into your browser.
 
-![Process Architecture](/home/jatin-sharma/UniConv/public/architecture.png)
+![Process Architecture](https://github.com/Jatin-Sharma-11/UniConvert/blob/main/public/architecture.png)
 
 ### How it Works
 1.  **User Interaction**: You drag and drop files into the React Dropzone.
