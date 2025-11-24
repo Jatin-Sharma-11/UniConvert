@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🦄 UniConvert
 
-## Getting Started
+> **Convert files without limits.** A powerful, client-side file converter running entirely in your browser.
 
-First, run the development server:
+![UniConvert Hero](/home/jatin-sharma/.gemini/antigravity/brain/7ed8044c-72bd-4e1b-8b21-7685ffc77e0d/uniconvert_local_1763996002814.png)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## ✨ Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Unlimited Conversions**: No daily limits or file size restrictions.
+- **Privacy First**: Files never leave your device. Everything happens locally.
+- **Blazing Fast**: Powered by WebAssembly (FFmpeg.wasm) for near-native performance.
+- **Multi-Format Support**:
+    - 🖼️ **Images**: JPG, PNG, WEBP, GIF, ICO, TIFF, BMP
+    - 🎵 **Audio**: MP3, WAV, OGG, AAC, M4A
+    - 🎥 **Video**: MP4, MKV, MOV, AVI, WEBM
+- **Batch Processing**: Convert multiple files at once.
+- **Modern UI**: Built with Shadcn UI and Tailwind CSS for a premium experience.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🏗️ Architecture
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+UniConvert leverages the power of **WebAssembly** to bring desktop-grade media processing to the web. Unlike traditional converters that upload your files to a server, UniConvert loads the FFmpeg engine directly into your browser.
 
-## Learn More
+![Process Architecture](/home/jatin-sharma/UniConv/public/architecture.png)
 
-To learn more about Next.js, take a look at the following resources:
+### How it Works
+1.  **User Interaction**: You drag and drop files into the React Dropzone.
+2.  **File Loading**: The app reads the file data into memory.
+3.  **FFmpeg Core**: The `ffmpeg.wasm` core (loaded from a CDN) is initialized in a Web Worker to prevent UI freezing.
+4.  **Conversion**: The file data is passed to FFmpeg, which transcodes it to the desired format.
+5.  **Output**: The converted file is generated as a Blob and made available for download immediately.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🚀 Getting Started
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Prerequisites
+- Node.js 18+ (Recommended: 20+)
+- npm or yarn
 
-## Deploy on Vercel
+### Installation
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1.  **Clone the repository**
+    ```bash
+    git clone https://github.com/Jatin-Sharma-11/UniConvert.git
+    cd UniConvert
+    ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2.  **Install dependencies**
+    ```bash
+    npm install
+    ```
+
+3.  **Run the development server**
+    ```bash
+    npm run dev
+    ```
+
+4.  Open [http://localhost:3000](http://localhost:3000) with your browser.
+
+## 🛠️ Tech Stack
+
+-   **Framework**: [Next.js 14](https://nextjs.org/) (App Router)
+-   **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+-   **Components**: [Shadcn UI](https://ui.shadcn.com/)
+-   **Icons**: [Lucide React](https://lucide.dev/)
+-   **Core Engine**: [FFmpeg.wasm](https://ffmpegwasm.netlify.app/)
+-   **File Handling**: [React Dropzone](https://react-dropzone.js.org/)
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+---
+
+Made with ❤️ by [Jatin Sharma](https://github.com/Jatin-Sharma-11)
